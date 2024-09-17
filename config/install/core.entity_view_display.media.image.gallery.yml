@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.gallery
+    - field.field.media.image.field_media_image
+    - image.style.gallery
+    - image.style.gallery_colorbox
+    - media.type.image
+  module:
+    - image
+id: media.image.gallery
+targetEntityType: media
+bundle: image
+mode: gallery
+content:
+  field_media_image:
+    weight: 0
+    label: hidden
+    third_party_settings: {  }
+    region: content
+    type: image
+    settings:
+      image_style: gallery
+      image_link: ''
+hidden:
+  created: true
+  name: true
+  thumbnail: true
+  uid: true

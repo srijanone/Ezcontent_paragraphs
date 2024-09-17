@@ -18,4 +18,19 @@ dependencies:
   - media_entity_instagram
   - media_entity_twitter
   - image_widget_crop
-
+  - color_field:color_field
+  - layout_builder_restrictions:layout_builder_restrictions
+  - layout_library:layout_library
+  - libraries:libraries
+  - colorbox
+  - paragraphs_previewer:paragraphs_previewer
+  - slick_paragraphs
+  - allowed_formats:allowed_formats
+  - paragraphs_jquery_ui_accordion
+  - webform
+  - simple_gmap
+  - viewsreference
+  - fvm
+  - content_moderation
+  - field_group
+  - smart_trim

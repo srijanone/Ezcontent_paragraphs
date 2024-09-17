@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.crop_16_9
+  module:
+    - crop
+name: card_list
+label: 'Card List (16:9)'
+effects:
+  6db52c3e-becd-49ac-a981-bf913b014687:
+    uuid: 6db52c3e-becd-49ac-a981-bf913b014687
+    id: crop_crop
+    weight: -10
+    data:
+      crop_type: crop_16_9
+  85845b61-9db2-4991-abe5-1e2dd8cac6c1:
+    uuid: 85845b61-9db2-4991-abe5-1e2dd8cac6c1
+    id: image_scale
+    weight: 3
+    data:
+      width: 640
+      height: null
+      upscale: false
