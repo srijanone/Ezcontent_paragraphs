@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.instagram.field_media_oembed_instagram
+    - media.type.instagram
+  module:
+    - media_entity_instagram
+id: media.instagram.default
+targetEntityType: media
+bundle: instagram
+mode: default
+content:
+  field_media_oembed_instagram:
+    type: instagram_embed
+    label: hidden
+    weight: 0
+    settings:
+      max_width: 480
+      hidecaption: false
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  name: true
+  thumbnail: true
+  uid: true
