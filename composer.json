@@ -1,5 +1,5 @@
 {
-    "name": "drupal/ezcontent_paragraphs",
+    "name": "srijanone/ezcontent_paragraphs",
     "description": "Provides base for multiple paragraphs like Text, Image, Video etc...",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",
