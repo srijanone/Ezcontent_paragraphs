@@ -1,0 +1,101 @@
+.paragraph--type--hero-media {
+  padding: 0;
+}
+.slick-arrow::before {
+  color: #3367d6;
+  opacity: 1;
+}
+.slick-arrow:hover::before {
+  color: #3367d6;
+}
+.slick-arrow.slick-prev {
+  left: 35px;
+}
+.slick-arrow.slick-next {
+  right: 35px;
+}
+.paragraph--type--card.paragraph--view-mode--hero-media .field--name-field-media-image {
+  padding: 0;
+}
+.paragraph--type--card {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+.paragraph--type--card::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.paragraph--type--card .hero_media_content {
+  background-color: rgba(0, 0, 0, 0.37);
+  border-width: 0;
+  color: #fff;
+  letter-spacing: 0;
+  line-height: 20px;
+  margin: 0;
+  opacity: 1;
+  display: block;
+  height: auto;
+  left: 0;
+  padding: 5px 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.paragraph--type--card .hero_media_content.center {
+  text-align: center;
+}
+.paragraph--type--card .hero_media_content.left {
+  text-align: left;
+}
+.paragraph--type--card .hero_media_content.right {
+  text-align: right;
+}
+.paragraph--type--card .blazy__caption {
+  background: rgba(0, 0, 0, 0.5);
+  bottom: 0;
+  color: #fff;
+  display: none;
+  padding: 10px;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+.paragraph--type--card .blazy__caption:empty {
+  display: none;
+}
+
+.paragraph--type--hero-media .field--name-field-title {
+  font-size: 20px;
+  letter-spacing: 1px;
+  line-height: 37px;
+  padding: 0 10px;
+  width: 100%;
+  margin: 0;
+  color: white;
+}
+
+.paragraph--type--hero-media .field--name-field-short-title {
+  font-size: 18px;
+  padding: 5px 10px 0;
+  margin: 0;
+}
+.paragraph--type--hero-media .field--name-field-subhead {
+  border-color: transparent;
+  font-size: 16px;
+  padding: 5px 10px 0;
+}
+
+.paragraph--type--hero-media .field--name-field-summary {
+  border-color: transparent;
+  display: block;
+  font-size: 14px;
+  padding: 5px 10px;
+}
+
+.paragraph--type--hero-media .field--name-field-link {
+  padding: 0 10px;
+  text-align: right;
+}

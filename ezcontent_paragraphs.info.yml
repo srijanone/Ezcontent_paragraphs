@@ -1,0 +1,10 @@
+name: Paragraphs Feature
+type: module
+description: 'Provides base for multiple paragraphs like Text, Image, Video etc...'
+package: EZContent Paragraphs
+core_version_requirement: ^8.8 || ^9 || ^10
+dependencies:
+  - better_normalizers:better_normalizers
+  - drupal:media_library
+  - paragraphs_edit:paragraphs_edit
+  - paragraphs:paragraphs_library

@@ -1,0 +1,24 @@
+ezcontent_card_css:
+  css:
+    theme:
+      css/card.css: {}
+ezcontent_cards_gallery_css:
+  css:
+    theme:
+      css/cards-gallery.css: {}
+ezcontent_embed_css:
+  css:
+    theme:
+      css/embed.css: {}
+ezcontent_gallery_css:
+  css:
+    theme:
+      css/gallery.css: {}
+ezcontent_paragraph.hero_media_display:
+  css:
+    theme:
+      css/hero_media.css: {}
+ezcontent_referenced_card_css:
+  css:
+    theme:
+      css/referenced-card.css: {}

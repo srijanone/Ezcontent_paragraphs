@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Install file for EzContent Paragraphs Module.
+ */
+
+use Drupal\block_content\Entity\BlockContentType;
+
+/**
+ * Changed the from library paragraph type icon.
+ */
+function ezcontent_paragraphs_update_8001() {
+  /** @var \Drupal\update_helper\Updater $updateHelper */
+  $updateHelper = \Drupal::service('update_helper.updater');
+
+  // Execute configuration update definitions with logging of success.
+  $updateHelper->executeUpdate('ezcontent_paragraphs', 'ezcontent_paragraphs_update_8001');
+
+  // Output logged messages to related channel of update execution.
+  return $updateHelper->logger()->output();
+}
+
+/**
+ * Remove the paragraph_content block type.
+ */
+function ezcontent_paragraphs_update_8002() {
+  BlockContentType::load('paragraph_content')->delete();
+}
