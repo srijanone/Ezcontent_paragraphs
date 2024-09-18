@@ -32,5 +32,16 @@
         "drupal/webform": "^6.2@beta",
         "drupal/simple_gmap": "3.1.x-dev@dev",
         "drupal/viewsreference": "^2.0@beta"
+    },
+    "extra": {
+        "patches": {
+            "drupal/core": {
+                "3062441 - Error: Call to a member function getConfigDependencyName() on null": "https://www.drupal.org/files/issues/2024-03-27/3062441-patch-41.patch",
+                "3352384 -Add Exception for TypeError Argument must be String": "https://www.drupal.org/files/issues/2023-08-07/TypeError_htmlspecialchars_ArgumentNustBeTypeString_ArrayGiven-3352384-43.patch"
+            },
+            "drupal/libraries": {
+                "3367706 - after installing libraries module ReverseContainer::generateServiceIdHash()": "https://www.drupal.org/files/issues/2024-09-17/3367706-15.patch"
+            }
+        }
     }
 }
