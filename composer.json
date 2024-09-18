@@ -21,7 +21,6 @@
         "drupal/entity_usage": "^2.0@beta",
         "drupal/fvm": "^2.0",
         "drupal/paragraphs_edit": "^3.0",
-        "drupal/ezcontent_paragraphs": "dev-main",
         "drupal/color_field": "^3.0",
         "drupal/layout_builder_restrictions": "^2.17",
         "drupal/layout_library": "^1.0@beta",
