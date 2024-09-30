@@ -9,15 +9,22 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Url;
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_paragraph__paragraph().
  */
 function ezcontent_paragraphs_preprocess_paragraph__paragraph(&$variables) {
-  $variables['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_gallery_css';
-  $variables['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_embed_css';
-    if ($variables['view_mode'] === "hero_media") {
-    $variables['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_paragraphs.hero_media_display';
+  // Attach default libraries.
+  ezcontent_paragraphs_attach_libraries($variables, [
+    'ezcontent_paragraphs/ezcontent_gallery_css',
+    'ezcontent_paragraphs/ezcontent_embed_css',
+    'ezcontent_paragraphs/ezcontent_referenced_card_css',
+  ]);
+
+  // Conditionally attach libraries based on view mode.
+  if ($variables['view_mode'] === "hero_media") {
+    ezcontent_paragraphs_attach_libraries($variables, [
+      'ezcontent_paragraphs/ezcontent_paragraphs.hero_media_display',
+    ]);
   }
-    $variables['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_referenced_card_css';
 }
 
 /**
@@ -155,5 +162,19 @@ function ezcontent_paragraphs_preprocess_block(&$vars) {
     if ($bundle === 'paragraph_block') {
       $vars['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_embed_css';
     }
+  }
+}
+
+/**
+ * Helper function to attach libraries to paragraphs.
+ *
+ * @param array &$variables
+ *   The variables array where libraries will be attached.
+ * @param array $libraries
+ *   An array of library names to attach.
+ */
+function ezcontent_paragraphs_attach_libraries(&$variables, array $libraries) {
+  foreach ($libraries as $library) {
+    $variables['#attached']['library'][] = $library;
   }
 }
