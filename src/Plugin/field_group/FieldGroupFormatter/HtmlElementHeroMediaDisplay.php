@@ -5,8 +5,8 @@ namespace Drupal\ezcontent_paragraphs\Plugin\field_group\FieldGroupFormatter;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Template\Attribute;
-use Drupal\field_group\Plugin\field_group\FieldGroupFormatter\HtmlElement;
 use Drupal\field_group\Element\HtmlElement as HtmlElementFormatter;
+use Drupal\field_group\Plugin\field_group\FieldGroupFormatter\HtmlElement;
 
 /**
  * Plugin implementation of the 'html_element_hero_media_display' formatter.
