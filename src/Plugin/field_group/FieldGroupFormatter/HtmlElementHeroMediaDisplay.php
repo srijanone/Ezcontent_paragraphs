@@ -6,12 +6,11 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\field_group\Element\HtmlElement as HtmlElementFormatter;
 use Drupal\field_group\Plugin\field_group\FieldGroupFormatter\HtmlElement;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'html_element_hero_media_display' formatter.
@@ -162,7 +161,8 @@ class HtmlElementHeroMediaDisplay extends HtmlElement implements ContainerFactor
       }
       else {
         $this->logger->warning('Background color field configuration is missing.');
-        $bg = ['color' => '#ffffff', 'opacity' => '1'];  // Fallback to default.
+        // Fallback to default.
+        $bg = ['color' => '#ffffff', 'opacity' => '1'];
       }
     }
 
