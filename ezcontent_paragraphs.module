@@ -14,7 +14,6 @@ use Drupal\Core\Url;
 function ezcontent_paragraphs_preprocess_paragraph__paragraph(&$variables) {
   $variables['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_gallery_css';
   $variables['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_embed_css';
-  $variables['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_gallery_css';
     if ($variables['view_mode'] === "hero_media") {
     $variables['#attached']['library'][] = 'ezcontent_paragraphs/ezcontent_paragraphs.hero_media_display';
   }
