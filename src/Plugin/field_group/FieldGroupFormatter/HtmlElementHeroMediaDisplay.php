@@ -3,10 +3,15 @@
 namespace Drupal\ezcontent_paragraphs\Plugin\field_group\FieldGroupFormatter;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\field_group\Element\HtmlElement as HtmlElementFormatter;
 use Drupal\field_group\Plugin\field_group\FieldGroupFormatter\HtmlElement;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Plugin implementation of the 'html_element_hero_media_display' formatter.
@@ -15,13 +20,51 @@ use Drupal\field_group\Plugin\field_group\FieldGroupFormatter\HtmlElement;
  *   id = "html_element_hero_media_display",
  *   label = @Translation("HTML element hero media display"),
  *   description = @Translation("This fieldgroup renders the inner content in a
- *   HTML element with classes and attributes."), supported_contexts = {
+ *   HTML element with classes and attributes."),
+ *   supported_contexts = {
  *     "form",
  *     "view",
  *   }
  * )
  */
-class HtmlElementHeroMediaDisplay extends HtmlElement {
+class HtmlElementHeroMediaDisplay extends HtmlElement implements ContainerFactoryPluginInterface {
+
+  /**
+   * The hex2rgba service.
+   *
+   * @var \Drupal\ezcontent_paragraphs\Hex2Rgba
+   */
+  protected $hex2rgbaService;
+
+  /**
+   * The logger service.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * Constructs a HtmlElementHeroMediaDisplay object.
+   *
+   * @param \Drupal\ezcontent_paragraphs\Hex2Rgba $hex2rgba
+   *   The hex2rgba service.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
+   */
+  public function __construct($hex2rgba, LoggerInterface $logger) {
+    $this->hex2rgbaService = $hex2rgba;
+    $this->logger = $logger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $container->get('ezcontent_paragraphs.hex2rgba'),
+      $container->get('logger.channel.default')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -31,72 +74,101 @@ class HtmlElementHeroMediaDisplay extends HtmlElement {
     $paragraph = $rendering_object['#paragraph'];
     $element_attributes = new Attribute();
 
-    if ($this->getSetting('attributes')) {
+    // Set attributes such as id, classes, and style using helper methods.
+    $this->setElementAttributes($element_attributes, $paragraph);
+    $this->applyBackgroundColor($element_attributes, $paragraph);
 
-      // This regex split the attributes string so that we can pass that
-      // later to drupal_attributes().
-      preg_match_all('/([^\s=]+)="([^"]+)"/', $this->getSetting('attributes'), $matches);
-
-      // Put the attribute and the value together.
-      foreach ($matches[1] as $key => $attribute) {
-        $element_attributes[$attribute] = $matches[2][$key];
-      }
-
-    }
-
-    // Add the id to the attributes array.
-    if ($this->getSetting('id')) {
-      $element_attributes['id'] = Html::getId($this->getSetting('id'));
-    }
-
-    // Add the classes to the attributes array.
-    $classes = $this->getClasses();
-    array_push($classes, $paragraph->field_text_position->value);
-    // Intialize $bg as an array with default values.
-    $bg = [];
-    $bg_color_field_config = \Drupal::entityTypeManager()
-      ->getStorage('field_config')
-      ->load('paragraph.card.field_text_background_color');
-    $default_value = 'default_value';
-    $bg_defaults = $bg_color_field_config->get($default_value);
-    $bg = $bg_defaults[0];
-    if (!empty($paragraph->get("field_text_background_color")->first())) {
-      $bg = $paragraph->get("field_text_background_color")->first()->getValue();
-    }
-    // @todo use DI instead of global service container.
-    $hex2rgba = \Drupal::service('ezcontent_paragraphs.hex2rgba');
-    $bg_color = $hex2rgba->hex2rgba($bg['color'], $bg['opacity']);
-    $element_attributes['style'] = "background-color: " . $bg_color . ";";
-    if (!empty($classes)) {
-      if (!isset($element_attributes['class'])) {
-        $element_attributes['class'] = [];
-      }
-      // If user also entered class in the attributes textfield,
-      // force it to an array.
-      else {
-        $element_attributes['class'] = [$element_attributes['class']];
-      }
-      $element_attributes['class'] = array_merge($classes, $element_attributes['class']->value());
-    }
-
-    $element['#effect'] = $this->getSetting('effect');
-    $element['#speed'] = $this->getSetting('speed');
+    $element['#attributes'] = $element_attributes;
     $element['#type'] = 'field_group_html_element';
     $element['#wrapper_element'] = $this->getSetting('element');
-    $element['#attributes'] = $element_attributes;
+    $element['#effect'] = $this->getSetting('effect');
+    $element['#speed'] = $this->getSetting('speed');
+
     if ($this->getSetting('show_label')) {
       $element['#title_element'] = $this->getSetting('label_element');
       $element['#title'] = Html::escape($this->getLabel());
     }
 
+    // Process the field group HTML element.
     $form_state = new FormState();
     HtmlElementFormatter::processHtmlElement($element, $form_state);
 
+    // Attach additional libraries if required.
     if ($this->getSetting('required_fields')) {
       $element['#attributes']['class'][] = 'field-group-html-element';
       $element['#attached']['library'][] = 'field_group/formatter.html_element';
       $element['#attached']['library'][] = 'field_group/core';
     }
+  }
+
+  /**
+   * Helper method to set element attributes such as ID and classes.
+   *
+   * @param \Drupal\Core\Template\Attribute $element_attributes
+   *   The attributes array to modify.
+   * @param object $paragraph
+   *   The paragraph entity.
+   */
+  protected function setElementAttributes(Attribute $element_attributes, $paragraph) {
+    // Set attributes based on settings.
+    if ($this->getSetting('attributes')) {
+      try {
+        preg_match_all('/([^\s=]+)="([^"]+)"/', $this->getSetting('attributes'), $matches);
+        foreach ($matches[1] as $key => $attribute) {
+          $element_attributes[$attribute] = $matches[2][$key];
+        }
+      }
+      catch (\Exception $e) {
+        $this->logger->error('Invalid attribute string: @error', ['@error' => $e->getMessage()]);
+      }
+    }
+
+    // Set ID attribute if present.
+    if ($this->getSetting('id')) {
+      $element_attributes['id'] = Html::getId($this->getSetting('id'));
+    }
+
+    // Set classes and add text position.
+    $classes = $this->getClasses();
+    if (!empty($paragraph->field_text_position)) {
+      $classes[] = $paragraph->field_text_position->value;
+    }
+
+    // Use addClass() to safely handle class additions.
+    $element_attributes->addClass($classes);
+  }
+
+  /**
+   * Helper method to apply background color styling.
+   *
+   * @param \Drupal\Core\Template\Attribute $element_attributes
+   *   The attributes array to modify.
+   * @param object $paragraph
+   *   The paragraph entity.
+   */
+  protected function applyBackgroundColor(Attribute $element_attributes, $paragraph) {
+    // Ensure field_text_background_color exists on the entity.
+    if ($paragraph->hasField('field_text_background_color') && !$paragraph->get('field_text_background_color')->isEmpty()) {
+      $bg = $paragraph->get('field_text_background_color')->first()->getValue();
+    }
+    else {
+      // Handle cases where field config is missing or null.
+      $bg_color_field_config = \Drupal::entityTypeManager()
+        ->getStorage('field_config')
+        ->load('paragraph.card.field_text_background_color');
+      if ($bg_color_field_config instanceof FieldConfigInterface) {
+        $default_value = $bg_color_field_config->get('default_value');
+        $bg = $default_value[0];
+      }
+      else {
+        $this->logger->warning('Background color field configuration is missing.');
+        $bg = ['color' => '#ffffff', 'opacity' => '1'];  // Fallback to default.
+      }
+    }
+
+    // Convert hex to RGBA.
+    $bg_color = $this->hex2rgbaService->hex2rgba($bg['color'], $bg['opacity']);
+    $element_attributes->setAttribute('style', "background-color: $bg_color;");
   }
 
 }
