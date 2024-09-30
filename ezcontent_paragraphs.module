@@ -116,7 +116,12 @@ function ezcontent_paragraphs_preprocess_ezcontent_colorbox_view_mode_formatter(
         ]
       );
   }
-  $variables['attributes']['title'] = isset($entity->field_title) && $entity->field_title->value ? $entity->field_title->value : $entity->getParentEntity()->getTitle();
+if ($entity->hasField('field_title') && !$entity->get('field_title')->isEmpty()) {
+  $variables['attributes']['title'] = $entity->get('field_title')->value;
+}
+else {
+  $variables['attributes']['title'] = $entity->getParentEntity()->getTitle();
+}
   $variables['attributes']['data-colorbox-gallery'] = $gallery_id;
   $variables['attributes']['class'] = ['colorbox'];
 }
